@@ -108,6 +108,9 @@ def upload():
     isError, data = validate_image()
 
     folderPath  = 'res/img/'
+    if not os.path.exists(folderPath):
+        os.makedirs(folderPath)
+
     files       = os.listdir(folderPath)
     folderId    = 0
     for image in files:
