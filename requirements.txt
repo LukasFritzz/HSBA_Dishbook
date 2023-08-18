@@ -1,0 +1,6 @@
+flask 
+pytesseract
+requests
+opencv
+openai
+mysql-connector-python
