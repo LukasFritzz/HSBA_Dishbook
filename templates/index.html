@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dishbook</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}" type="image/png">
+</head>
+<body style="background: #e5e0df;">
+
+    <header>
+        <div>
+            <a href="/">
+                <img src="{{ url_for('static', filename='img/logo.png') }}">
+            </a>
+            <a href="/" class="logo">ISHBOOK</a>
+        </div>
+        <ul class="navlist">
+            <li><a href="/">Home</a></li>
+            <li><a href="/imprint">Imprint</a></li>
+            <li><a href="/privacy">Data protection</a></li>
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+
+        <div class="bx bx-menu" id="menu-icon"></div>
+    </header>
+
+    <section class="main-section">
+        <div class="main-text">
+            <h4>Discover a World of Flavors</h4>
+            <h1>DISHBOOK</h1>
+            <p class="description">
+                Welcome to DISHBOOK, the startup that revolutionizes the way you read menus.
+                No more guessing what your dish might look like. Now you can see it before ordering.
+            </p>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div>
+                {% for message in messages %}
+                <div class="alert">
+                    <p>{{ message }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+            <form action="/upload#result" method="post" enctype="multipart/form-data">
+                <input name="image" type="file" class="form-control" onchange="getImagePreview(event)" accept=".png, .jpg, .jpeg">
+                <button type="submit"><i class='bx bx-upload'></i>Upload</button>
+            </form>
+        </div>
+
+        <div class="main-img">
+            <img src="{{ url_for('static', filename='img/banner.png') }}" alt="">
+        </div>
+    </section>
+    
+    <div class="icon">
+        <a href="/"><i class='bx bxl-instagram'></i></a>
+        <a href="/"><i class='bx bxl-linkedin-square'></i></a>
+        <a href="/"><i class='bx bxl-youtube'></i></a>
+    </div>
+
+    <div class="result-link">
+        {% if data %}
+        <a href="#result"><i class='bx bxs-down-arrow'></i></a>
+        {% else %}
+        <a href="#"><i class='bx bxs-up-arrow'></i></a>
+        {% endif %}
+    </div>
+
+    <section id="result">
+        {% if data %}
+        <div class="data-area">
+            {% for item in data %}
+            <div class="data">
+                {% if item.image %}
+                <img src="{{ item.image }}" alt="Relevant Image" class="img-thumbnail">
+                {% endif %}
+                <h2>{{ item.line }}</h2>
+                <p>{{ item.text }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </section>
+
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
