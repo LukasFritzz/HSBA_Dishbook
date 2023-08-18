@@ -11,7 +11,6 @@ app.secret_key = secrets.token_hex(16)
 from res.py.db import execute_sql_query
 
 GOOGLE_API_KEY      = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-#GOOGLE_API_KEY     = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 SEARCH_ENGINE_ID    = 'XXXXXXXXXXXXXXXXX'
 TESSERACT_PATH      = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 openai.api_key      = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -37,11 +36,9 @@ def process_image(imagePath):
         )
     except Exception as e:
         return "error1", recognizedText, openaiResponse
-
-    #openaiResponse = "[['Eggs', 'Text Num 1'],['Eggs', 'Text Num 2'],['Eggs', 'Text']]"
+        
     try:
         responseArray = ast.literal_eval(openaiResponse.choices[0].message.content)
-        #responseArray = ast.literal_eval(openaiResponse)
     except (ValueError, SyntaxError):
         return "error2", recognizedText, openaiResponse
     
