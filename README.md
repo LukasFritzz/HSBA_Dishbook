@@ -8,6 +8,4 @@
 
 3. follow how to set up path for ocr exe from this link 'https://linuxhint.com/install-tesseract-windows/' 
 
-4. replace path in app.py with the one you have
-
-5. execute python script app.py
+4. execute python script app.py
