@@ -1,113 +1,23 @@
-from flask import Flask, render_template, request, jsonify, redirect, flash, url_for
-import cv2
-import pytesseract
-import requests
-import os
-import secrets
-import openai
-import ast
+import  secrets
+import  hashlib
+
+from    static.py.main_functions    import *
+from    static.py.db                import execute_sql_query
+from    flask                       import Flask, render_template, redirect, flash, url_for, session, g
+
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
-from res.py.db import execute_sql_query
-
-GOOGLE_API_KEY      = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-SEARCH_ENGINE_ID    = 'XXXXXXXXXXXXXXXXX'
-TESSERACT_PATH      = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-openai.api_key      = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
-
-
-def process_image(imagePath):
-
-    image = cv2.imread(imagePath)
-
-    recognizedText  = pytesseract.image_to_string(image)
-    openaiResponse  = ""
-    filteredData    = []
-
-    if not recognizedText.strip():
-        return "error4", recognizedText, openaiResponse
-
-    try:
-        openaiResponse = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": "you are chef. Follow 2 steps. 1. step: extract all dishes you can find in text1 = '" + recognizedText + "'and respond with array[[,],[,] etc...] and no other explanation. Array[i][0] contains names of extracted dishes that appear in text1. Correct the names if typo. 2 step which (does not relate to my text1) append array with new column Array[i][1] which contains helpful information (<= 10 words) of dish, generate your own don't take it from text1"}],  
-            max_tokens=150
-        )
-    except Exception as e:
-        return "error1", recognizedText, openaiResponse
-        
-    try:
-        responseArray = ast.literal_eval(openaiResponse.choices[0].message.content)
-    except (ValueError, SyntaxError):
-        return "error2", recognizedText, openaiResponse
-    
-    if not isinstance(responseArray, list):
-        return "error2", recognizedText, openaiResponse
-
-    for line in responseArray:
-        url, isError = get_relevant_image("meal: " + line[0])
-        if isError:
-            return "error3", recognizedText, openaiResponse
-        filteredData.append([line[0],line[1],url])
-
-    data = [{'line': lineMeal, 'text': lineText, 'image': image} for lineMeal, lineText, image in filteredData]
-
-    return data, recognizedText, openaiResponse
-
-
-def get_relevant_image(searchQuery):
-    relevantImage   = None
-    numberResults   = 3
-    isError         = False
-    url             = f'https://www.googleapis.com/customsearch/v1?key={GOOGLE_API_KEY}&cx={SEARCH_ENGINE_ID}&q={searchQuery}&searchType=image&num={numberResults}'
-
-    data = requests.get(url).json()
-
-    if 'items' in data:
-        for dish in data['items']:
-            imageUrl = dish.get('link')
-
-            if imageUrl and imageUrl.lower().endswith(('.jpg', '.png')):
-                relevantImage = imageUrl
-                break
-    else:
-        if data['error']['code'] == 429:
-            isError = True
-
-    return relevantImage, isError
-
-
-def allowed_file(fileName):
-    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-    return '.' in fileName and fileName.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-def validate_image():
-    if 'image' not in request.files:
-        return True, "error5"
-
-    image = request.files['image']
-    if not image.filename:
-        return True, "error6"
-    
-    if not allowed_file(image.filename):
-        return True, "error7"
-    
-    return False, ""
-
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html',user=g.user)
 
-
-@app.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['POST', 'GET'])
 def upload():
 
-    isError, data = validate_image()
+    isError, data = validate_input()
 
-    folderPath  = 'res/img/'
+    folderPath  = 'static/history/'
     if not os.path.exists(folderPath):
         os.makedirs(folderPath)
 
@@ -126,28 +36,32 @@ def upload():
     newId = max(queryID, folderId) + 1 if queryID is not None else folderId + 1
     
     errorMessage = {
-        'error1': 'OpenAI SSL certificate error.'
-        ,'error2': 'OpenAI ouput error.'
-        ,'error3': 'Exceeded google api limit.'
-        ,'error4': 'No text was found.'
-        ,'error5': 'No image provided.'
-        ,'error6': 'No selected file.'
-        ,'error7': 'Invalid file format.'
+        'error1': 'OpenAI ouput error.'
+        ,'error2': 'Exceeded google api limit.'
+        ,'error3': 'No text was found.'
+        ,'error4': 'No image provided.'
+        ,'error5': 'No selected file.'
+        ,'error6': 'Invalid file format.'
+        ,'error7': 'Missing Consent to Privacy and Terms of Condition.'
     }
 
     if not isError:
         fileName        = f'card_{newId}.jpg'
         imagePath       = os.path.join(folderPath, fileName)
         request.files['image'].save(imagePath)
-    
-        data, recognizedText, openaiResponse = process_image(imagePath)
+        
+        restaurantName, address = get_meta_data(imagePath)
+
+        data, recognizedText, response = process_image(imagePath, newId)
         isError         = isinstance(data, str) and data in errorMessage
-        insertValue     = (newId, recognizedText, str(openaiResponse), int(isError), None if not isError else errorMessage[data], imagePath),
+
+        insertValue     = (newId, g.id, recognizedText, str(response), int(isError), None if not isError else errorMessage[data], os.path.join('history/', fileName), address, restaurantName),
   
     else:
-        insertValue     = (newId, None, None, 1, errorMessage[data], None),
+        insertValue     = (newId, g.id, None, None, 1, errorMessage[data], None, None, None),
 
-    insertStatement     = "INSERT INTO Query (ID, RECOGNIZED_TEXT, OPENAI_RESPONSE, IS_ERROR, ERROR_MESSAGE, IMAGE) VALUES (%s,%s,%s,%s,%s,%s)"
+
+    insertStatement     = "INSERT INTO Query (ID, USER_ID, RECOGNIZED_TEXT, OPENAI_RESPONSE, IS_ERROR, ERROR_MESSAGE, IMAGE, ADDRESS, RESTAURANT_NAME) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
     execute_sql_query(insertStatement, insertValue, fetch=False)
     
     if isError:
@@ -158,15 +72,81 @@ def upload():
     insertValue         = [(newId, item['line'], item['text'], item['image']) for item in data]
     execute_sql_query(insertStatement, insertValue, fetch=False)
 
-    return render_template('index.html', data=data)
+    return render_template('index.html',data=data,user=g.user)
 
 @app.route('/imprint')
 def imprint():
-    return render_template('imprint.html')
+    return render_template('imprint.html',user=g.user)
 
 @app.route('/privacy')
 def privacy():
-    return render_template('privacy.html')
+    return render_template('privacy.html',user=g.user)
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    if g.user:
+        return redirect(url_for('index'))
+    if request.method == 'POST':
+
+        if request.form['action'] == 'login':
+            result = execute_sql_query("SELECT ID, NAME, EMAIL, PASSWORD FROM User WHERE EMAIL = %s", (request.form['email'],))
+
+            if result:
+                if hashlib.sha256(request.form['password'].encode('utf-8')).hexdigest() == result[0][3]:
+                    session['user'] = result[0][1]
+                    session['id']   = result[0][0]
+                    return redirect(url_for('index'))
+                else:
+                    flash('Wrong password.', 'error')
+                    return redirect(url_for('login'))
+            
+            else:
+                flash('Email does not exist.', 'error')
+                return redirect(url_for('login'))
+
+        elif request.form['action'] == 'signup':
+
+            result = execute_sql_query("SELECT 1 FROM User WHERE EMAIL = %s", (request.form['email'],))
+
+            if not result:
+                hashedPassword  = hashlib.sha256(request.form['password'].encode('utf-8')).hexdigest()
+                insertStatement = "INSERT INTO User (EMAIL, PASSWORD, NAME, STATUS) VALUES (%s, %s, %s, %s)"
+                insertValue     = (request.form['email'], hashedPassword, request.form['name'], 'open'),
+                execute_sql_query(insertStatement, insertValue, fetch=False)
+
+                flash('Successfully registered.', 'success')
+            else:
+                flash('Email already exists.', 'error')
+
+
+    return render_template('login.html',user=g.user)
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
+
+@app.route('/history')
+def history():
+    if not g.id:
+        return redirect(url_for('index'))
+
+    result = execute_sql_query("SELECT	ID, Dish, Q.IMAGE FROM Query Q INNER JOIN Result R ON Q.ID = R.QUERY_ID WHERE USER_ID = %s AND IS_ERROR = 0", (g.id,))
+
+    numMenus = len(set(item[0] for item in result))
+
+    return render_template('history.html', data=result, numMenus = numMenus,user=g.user)
+
+
+@app.before_request
+def before_request():
+    g.user  = None
+    g.id    = None
+    if 'user' in session:
+        g.user = session['user']
+    if 'id' in session:
+        g.id = session['id']
 
 # start server
 if __name__ == '__main__':

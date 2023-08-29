@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dishbook - Imprint</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}" type="image/png">
+</head>
+<body>
+    <header style="background: linear-gradient(350.59deg, #4d9559 0%, #38703d 28.53%, #284b41 100%); padding-top: 7px; padding-bottom: 7px;">
+        <div>
+            <a href="/">
+                <img src="{{ url_for('static', filename='img/logo.png') }}">
+            </a>
+            <a href="/" class="logo">ISHBOOK</a>
+        </div>
+        <ul class="navlist">
+            <li><a href="/">Home</a></li>
+            <li><a href="/imprint">Imprint</a></li>
+            <li><a href="/privacy">Data protection</a></li>
+            {% if user %}
+            <li><a href="/history">History</a></li>
+            <li><a href="/logout">Logout</a></li>
+            {% else %}
+            <li><a href="/login">Login</a></li>
+            {% endif %}
+        </ul>
+
+        <div class="bx bx-menu" id="menu-icon"></div>
+    </header>
+
+    <div class="container2">
+        <h1>Impressum</h1>
+
+        <div class="block1">
+            <h4>Anschrift:</h4>
+            <div class="daten_text">
+                <p>Willy-Brandt-Straße 75<br> 20459 Hamburg <br> Deutschland</p>
+            </div>
+        </div>
+
+        <div class="block1">
+            <h4>Kontakt:</h4>
+            <div class="daten_text">
+                <p>Lukas Fritz <br> 0151 123456 <br> <a href="mailto:dishbookde@gmail.com">dishbookde@gmail.com</a></p>
+            </div>
+        </div>
+
+        <div class="block1" style="margin-bottom: 50px;">
+            <h4>Haftungsausschluss:</h4>
+            <div class="daten_text">
+                <p>Externe verlinkte Internetseiten unterliegen nicht unserer ständigen Kontrolle. Obwohl sie vor Verlinkung geprüft werden, übernehmen wir keine Verantwortung für deren aktuellen Inhalt. Verantwortlich sind hier allein die Inhaber der entsprechenden Seiten.</p>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,19 +1,15 @@
-import mysql.connector
-
-host        = "XXX.XXX.XXX.XXX"
-user        = "XXXXXXXXXXXXXXX"
-password    = "XXXXXXXXXXXXXXX"
-database    = "XXXXXXXXXXXXXXX"
+import  mysql.connector
+import  static.py.keys  as keys
 
 def execute_sql_query(statement, values=None, fetch=True):
     try:
         connection = mysql.connector.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=database
+            host        = keys.host
+            ,user       = keys.dbUser
+            ,password   = keys.dbPassword
+            ,database   = keys.database
         )
-
+        
         cursor = connection.cursor()
         
         if values:
