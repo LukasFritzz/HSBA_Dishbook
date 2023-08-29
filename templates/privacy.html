@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dishbook - Privacy</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}" type="image/png">
+
+</head>
+<body>
+    <header style="background: linear-gradient(350.59deg, #4d9559 0%, #38703d 28.53%, #284b41 100%); padding-top: 7px; padding-bottom: 7px;">
+        <div>
+            <a href="/">
+                <img src="{{ url_for('static', filename='img/logo.png') }}">
+            </a>
+            <a href="/" class="logo">ISHBOOK</a>
+        </div>
+        <ul class="navlist">
+            <li><a href="/">Home</a></li>
+            <li><a href="/imprint">Imprint</a></li>
+            <li><a href="/privacy">Data protection</a></li>
+            {% if user %}
+            <li><a href="/history">History</a></li>
+            <li><a href="/logout">Logout</a></li>
+            {% else %}
+            <li><a href="/login">Login</a></li>
+            {% endif %}
+        </ul>
+
+        <div class="bx bx-menu" id="menu-icon"></div>
+    </header>
+
+
+    <div class="container1">
+
+        <h1>Datenschutzerklärung</h1>
+        <div class="block1">
+            <p>
+                Mit dieser Datenschutzerklärung möchten wir Sie über Art, Umfang und Zweck der Verarbeitung von personenbezogenen Daten (im Folgenden auch nur als "Daten" bezeichnet) aufklären. Personenbezogene Daten sind alle Daten, die einen persönlichen Bezug zu Ihnen aufweisen, z. B. Name, Adresse, E-Mail-Adresse oder Ihr Nutzerverhalten. Die Datenschutzerklärung gilt für alle von uns vorgenommene Daten-Verarbeitungsvorgänge sowohl im Rahmen unserer Kerntätigkeit als auch für die von uns vorgehaltenen Online-Medien.
+            </p>
+        </div>
+
+        <div class="block1">
+            <h2>Wer bei uns für die Datenverarbeitung verantwortlich ist</h2>
+            <div class="daten_text">
+                <p>Verantwortlich für die Datenverarbeitung ist:</p>
+                <p style="margin-top: 13px; margin-left: 20px;">Lukas Fritz<br> Willy-Brandt-Straße 75<br>20459 Hamburg<br>Deutschland<br>0151 123456<br><a style="color: #000; text-decoration: none;" href="mailto:dishbookde@gmail.com?subject=Datenschutz">dishbookde@gmail.com</a><br></p>
+            </div>
+        </div>
+
+        <div class="block1">
+            <h2>Ihre Rechte nach der DSGVO</h2>
+            <div class="daten_text">
+
+                <p>Nach der DSGVO stehen Ihnen die nachfolgend aufgeführten Rechte zu, die Sie jederzeit bei dem in Ziffer 1. dieser Datenschutzerklärung genannten Verantwortlichen geltend machen können:</p>
+                <ul>
+                    <li><strong>Recht auf Auskunft:</strong> Sie haben das Recht, von uns Auskunft darüber zu verlangen, ob und welche Daten wir von Ihnen verarbeiten.</li>
+                    <li><strong>Recht auf Berichtigung:</strong> Sie haben das Recht, die Berichtigung unrichtiger oder Vervollständigung unvollständiger Daten zu verlangen.</li>
+                    <li><strong>Recht auf Löschung:</strong> Sie haben das Recht, die Löschung Ihrer Daten zu verlangen.</li>
+                    <li><strong>Recht auf Einschränkung:</strong> Sie haben in bestimmten Fällen das Recht zu verlangen, dass wir Ihre Daten nur noch eingeschränkt bearbeiten.</li>
+                    <li><strong>Recht auf Datenübertragbarkeit:</strong> Sie haben das Recht zu verlangen, dass wir Ihnen oder einem anderen Verantwortlichen Ihre Daten in einem strukturierten, gängigen und maschinenlesebaren Format übermitteln.</li>
+                    <li><strong>Beschwerderecht</strong>: Sie haben das Recht, sich bei einer Aufsichtsbehörde zu beschweren. Zuständig ist die Aufsichtsbehörde Ihres üblichen Aufenthaltsortes, Ihres Arbeitsplatzes oder unseres Firmensitzes.</li>
+                </ul>
+                <h3>Widerrufsrecht</h3>
+                <p>Sie haben das Recht, die von Ihnen erteilte Einwilligung zur Datenverarbeitung jederzeit zu widerrufen.</p>
+                <h3>Widerspruchsrecht</h3>
+                <p>
+                    Sie haben das Recht, jederzeit gegen die Verarbeitung Ihrer Daten, die wir auf unser berechtigtes Interesse nach Art. 6 Abs. 1 lit. f DSGVO stützen, Widerspruch einzulegen. Sofern Sie von Ihrem Widerspruchsrecht Gebrauch machen, bitten wir Sie um die Darlegung der Gründe. Wir werden Ihre personenbezogenen Daten dann nicht mehr verarbeiten, es sei denn, wir können Ihnen gegenüber nachweisen, dass zwingende schutzwürdige Gründe an der Datenverarbeitung Ihre Interessen und Rechte überwiegen.
+                </p>
+                <p>
+                    <span style="text-decoration: underline;"><strong>Unabhängig vom vorstehend Gesagten, haben Sie das jederzeitige Recht, der Verarbeitung Ihrer personenbezogenen Daten für Zwecke der Werbung und Datenanalyse zu widersprechen.</strong></span>
+                </p>
+                <p>
+                    Ihren Widerspruch richten Sie bitte an die oben angegebene Kontaktadresse des Verantwortlichen.
+                </p>
+            </div>
+        </div>
+
+        <div class="block1">
+            <h2>Wann löschen wir Ihre Daten?</h2>
+            <div class="daten_text">
+                <p>Wir löschen Ihre Daten dann, wenn wir diese nicht mehr brauchen oder Sie uns dies vorgeben.</p>
+                <ul>
+                    <li>
+                        wenn der Zweck der Datenverarbeitung weggefallen ist und damit die jeweilige in den einzelnen Datenschutzhinweisen genannte Rechtsgrundlage nicht mehr besteht, also bspw.
+                        <ul>
+                            <li>nach Beendigung der zwischen uns bestehenden vertraglichen oder mitgliedschaftlichen Beziehungen (Art. 6 Abs. 1 lit. a DSGVO) oder</li>
+                            <li>
+                                nach Wegfall unseres berechtigten Interesses an der weiteren Verarbeitung oder Speicherung Ihrer Daten (Art. 6 Abs. 1 lit. f DSGVO),
+                            </li>
+                        </ul>
+                    </li>
+                    <li>wenn Sie von Ihrem Widerrufsrecht Gebrauch machen und keine anderweitige gesetzliche Rechtsgrundlage für die Verarbeitung im Sinne von Art. 6 Abs. 1 lit. b-f DSGVO eingreift,</li>
+                    <li>wenn Sie vom Ihrem Widerspruchsrecht Gebrauch machen und der Löschung keine zwingenden schutzwürdigen Gründe entgegenstehen.</li>
+                </ul>
+                <p>Sofern wir (bestimmte Teile) Ihre(r) Daten jedoch noch für andere Zwecke vorhalten müssen, weil dies etwa steuerliche Aufbewahrungsfristen (in der Regel 6 Jahre für Geschäftskorrespondenz bzw. 10 Jahre für Buchungsbelege) oder die Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen aus vertraglichen Beziehungen (bis zu vier Jahren) erforderlich machen oder die Daten zum Schutz der Rechte einer anderen natürlichen oder juristischen Person gebraucht werden, löschen wir (den Teil) Ihre(r) Daten erst nach Ablauf dieser Fristen. Bis zum Ablauf dieser Fristen beschränken wir die Verarbeitung dieser Daten jedoch auf diese Zwecke (Erfüllung der Aufbewahrungspflichten).</p>
+            </div>
+        </div>
+
+        <div class="block1">
+            <h2>Cookies</h2>
+            <div class="daten_text">
+
+                <p>
+                    Unsere Internetseite nutzt Cookies. Bei Cookies handelt es sich um kleine Textdateien, bestehend aus einer Reihe von Zahlen und Buchstaben, die auf dem von Ihnen genutzten Endgerät abgelegt und gespeichert werden. Cookies dienen vorrangig dazu, Informationen zwischen dem von Ihnen genutzten Endgerät und unserer Webseite auszutauschen.
+                </p>
+                <p>
+                    Beim Besuch unserer Webseiten werden zwei Typen von Cookies eingesetzt:
+                </p>
+                <ul>
+                    <li>
+                        <strong>Temporäre Cookies (Session Cookies):</strong> Diese speichern eine sogenannte Session-ID, mit welcher sich verschiedene Anfragen Ihres Browsers der gemeinsamen Sitzung zuordnen lassen. Die Session-Cookies werden gelöscht wenn Sie Ihren Browser schließen. Verwendet werden Temporäre Cookies, um die Suchanfragen des Nutzers beim Neuladen der Seite zu erhalten und damit die Benutzerfreundlichkeit zu erhöhen.
+                    </li>
+                    <li>
+                        <strong>Permanente Cookies: </strong>Permanente Cookies bleiben auch nach dem Schließen des Browsers in unserer Datenbank gespeichert. Dazu gehören das Datum an dem Sie die Cookies akzeptiert haben, ihr Browser und die Seite, welche Sie aufgerufen haben. Diese Daten dienen ausschließlich Statistik-Zwecken.
+                    </li>
+                </ul>
+                <h4>Betroffene Daten:</h4>
+                <ul>
+                    <li>
+                        Nutzungsdaten (Zugriffszeiten, angeklickte Webseiten)
+                    </li>
+                    <li>
+                        Kommunikationsdaten (Informationen über den genutzten Browser).
+                    </li>
+                </ul>
+                <p>
+                    <strong>Betroffene Personen: </strong>Nutzer unserer Onlineangebote
+                </p>
+                <p>
+                    <strong>Verarbeitungszweck: </strong>Ausspielen unserer Internetseiten, Gewährleistung des Betriebs unserer Internetseiten, Verbesserung unseres Internetangebotes und Marketing. Wir verwenden diese Daten ausschließlich, um zu analysieren, welche Browser am häufigsten verwendet werden und um die Seite für diese Browser zu optimieren. Die Zugriffszeiten und aufgerufene Seiten werden zur Analyse des Webtraffics gespeichert. Diese Daten lassen keinen Rückschluss auf die Identität des Benutzers zu.
+                </p>
+                <h4>Rechtsgrundlage:</h4> <p style="margin-top: 12px;"><strong>Berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO</strong></p>Sofern wir von Ihnen keine Einwilligung in das Setzen der Cookies einholen, stützen wir die Verarbeitung Ihrer Daten auf unser berechtigtes Interesse, die Qualität und Benutzerfreundlichkeit unseres Internetauftritts, insbesondere der Inhalte und Funktionen zu verbessern. Sie haben über die Sicherheitseinstellungen Ihres Browsers, dem Einsatz der von uns im Rahmen unseres berechtigten Interesses gesetzten Cookies zu widersprechen. Dort haben Sie die Möglichkeit festzulegen, ob Sie etwa von vornherein keine oder nur auf Nachfrage Cookies akzeptieren oder aber festlegen, dass Cookies nach jedem Schließen Ihres Browsers gelöscht werden. Werden Cookies für unsere Webseite deaktiviert, können möglicherweise nicht mehr alle Funktionen der Webseite vollumfänglich genutzt werden.
+            </div>
+        </div>
+
+        <div class="block1">
+            <div class="daten_text">
+                <p>
+                    <strong>Einwilligung, Art. 6 Abs. 1 lit. a DSGVO</strong><br>Sofern wir Sie vor Ihrem Besuch unserer Internetpräsenz darum bitten, bestimmte Cookies auf Ihr Endgerät setzen zu dürfen, und Sie hierein einwilligen, ist in der von Ihnen erteilten Einwilligung die Rechtsgrundlage zu sehen. Wir informieren Sie im Rahmen der Einwilligung darüber, welche Cookies wir im Einzelnen setzen. Sofern Sie diese Einwilligung nicht erteilen, setzen sich lediglich die sogenannten technisch notwendigen Cookies, die für den ordnungsgemäßen Betrieb unserer Internetseiten sowie deren Darstellung in Ihrem Browser erforderlich sind. Sofern Sie in das Setzen von Cookies eingewilligt haben, haben die jederzeitige Möglichkeit, uns gegenüber der erteilten Einwilligung zu widerrufen.
+                </p>
+            </div>
+        </div>
+
+        <div class="block1">
+            <h2>Webhosting</h2>
+            <div class="daten_text">
+                <p>Wir bedienen uns zum Vorhalten unserer Internetseiten eines Anbieters, auf dessen Server unsere Internetseiten gespeichert und für den Abruf im Internet verfügbar gemacht werden (Hosting). Hierbei können von dem Anbieter all diejenigen über den von Ihnen genutzten Browser übertragenen Daten verarbeitet werden, die bei der Nutzung unserer Internetseiten anfallen. Hierzu gehören insbesondere Ihre IP-Adresse, die der Anbieter benötigt, um unser Online-Angebot an den von Ihnen genutzten Browser ausliefern zu können sowie sämtliche von Ihnen über unsere Internetseite getätigten Eingaben. Daneben kann der von uns genutzte Anbieter&nbsp;&nbsp;</p>
+                <ul>
+                    <li>das Datum und die Uhrzeit des Zugriffs auf unsere Internetseite</li>
+                    <li>Zeitzonendifferenz zur Greenwich Mean Time (GMT)</li>
+                    <li>Zugriffsstatus (HTTP-Status)</li>
+                    <li>die übertragene Datenmenge</li>
+                    <li>der Internet-Service-Provider des zugreifenden Systems</li>
+                    <li>der von Ihnen verwendete Browsertyp und dessen Version</li>
+                    <li>das von Ihnen verwendete Betriebssystem</li>
+                    <li>die Internetseite, von welcher Sie gegebenenfalls auf unsere Internetseite gelangt sind</li>
+                    <li>die Seiten bzw. Unterseiten, welche Sie auf unserer Internetseite besuchen.</li>
+                </ul>
+                <p>erheben. Die vorgenannten Daten werden als Logfiles auf den Servern unseres Anbieters gespeichert. Dies ist erforderlich, um die Stabilität und Sicherheit des Betriebs unserer Internetseite zu gewährleisten.</p>
+                <h4>Betroffene Daten:</h4>
+                <ul>
+                    <li>Nutzungsdaten (Zugriffszeiten, angeklickte Webseiten)</li>
+                    <li>Kommunikationsdaten (Informationen über das genutzte Gerät, IP-Adresse)</li>
+                </ul>
+                <p><strong>Betroffene Personen: </strong>Nutzer unserer Internetpräsenz</p>
+                <p><strong>Verarbeitungszweck: </strong>Ausspielen unserer Internetseiten, Gewährleistung des Betriebs unserer Internetseiten</p>
+                <p><strong>Rechtsgrundlage:</strong> Berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO</p>
+            </div>
+        </div>
+
+
+        <div class="block1">
+            <h2>Google Maps</h2>
+            <div class="daten_text">
+                <p>Außerdem wird Kartenmaterial von Google Maps verwendet. Dabei wird die IP-Adresse des Nutzers an Google Maps gesendet, um anschließend das Kartenmaterial zu erhalten. Es kann nicht ausgeschlossen werden, dass Geodaten oder Cookies übermittelt werden. Es gelten die Datenschutzbestimmungen von Google LLC 1600 Amphitheatre Parkway Mountain View, CA 94043, USA .</p>
+                <p><strong>Rechtsgrundlage:</strong> Berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO, um Funktionalität der Website zu erhalten.</p>
+            </div>
+        </div>
+
+        <div class="block1">
+            <h2>Kontaktaufnahme</h2>
+            <div class="daten_text">
+                <p>Soweit Sie uns über E-Mail, Soziale Medien, Telefon, Fax, Post, unser Kontaktformular oder sonstwie ansprechen und uns hierbei personenbezogene Daten wie Ihren Namen, Ihre Telefonnummer oder Ihre E-Mail-Adresse zur Verfügung stellen oder weitere Angaben zur Ihrer Person oder Ihrem Anliegen machen, verarbeiten wir diese Daten zur Beantwortung Ihrer Anfrage im Rahmen des zwischen uns bestehenden vorvertraglichen oder vertraglichen Beziehungen.</p>
+                <h4>Betroffene Daten:</h4>
+                <ul>
+                    <li>Bestandsdaten (Namen)</li>
+                    <li>Kontakdaten (E-Mail-Adresse, Telefonnummer)</li>
+                </ul>
+                <p><strong>Betroffene Personen: </strong>Interessenten</p>
+                <p><strong>Verarbeitungszweck: </strong>Kommunikation sowie Beantwortung von Kontaktanfragen, Büro und Organisationsverfahren</p>
+                <p><strong>Rechtsgrundlage:</strong> Vertragserfüllung und vorvertragliche Anfragen, Art. 6 Abs. 1 lit. b DSGVO, berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO</p>
+            </div>
+        </div>
+
+
+        <div class="block1">
+            <h2>Sicherheitsmaßnahmen</h2>
+            <div class="daten_text">
+                <p>
+                    Wir treffen im Übrigen technische und organisatorische Sicherheitsmaßnahmen nach dem Stand der Technik, um die Vorschriften der Datenschutzgesetze einzuhalten und Ihre Daten gegen zufällige oder vorsätzliche Manipulationen, teilweisen oder vollständigen Verlust, Zerstörung oder gegen den unbefugten Zugriff Dritter zu schützen.
+                </p>
+            </div>
+        </div>
+
+        <div class="block1">
+            <h2>Aktualität und Änderung dieser Datenschutzerklärung</h2>
+            <div class="daten_text">
+                <p>Diese Datenschutzerklärung ist aktuell gültig und hat den Stand Januar 2023.</p>
+                <p>
+                    <strong>Diese Datenschutzerklärung wurde mit Hilfe des Datenschutz-Generators von SOS Recht erstellt. SOS Recht ist ein Angebot der Mueller.legal Rechtsanwälte Partnerschaft mit Sitz in Berlin.</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dishbook - Login</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}" type="image/png">
+</head>
+<body>
+    <header style="background: linear-gradient(350.59deg, #4d9559 0%, #38703d 28.53%, #284b41 100%); padding-top: 7px; padding-bottom: 7px;">
+        <div>
+            <a href="/">
+                <img src="{{ url_for('static', filename='img/logo.png') }}">
+            </a>
+            <a href="/" class="logo">ISHBOOK</a>
+        </div>
+        <ul class="navlist">
+            <li><a href="/">Home</a></li>
+            <li><a href="/imprint">Imprint</a></li>
+            <li><a href="/privacy">Data protection</a></li>
+            {% if user %}
+            <li><a href="/history">History</a></li>
+            <li><a href="/logout">Logout</a></li>
+            {% else %}
+            <li><a href="/login">Login</a></li>
+            {% endif %}
+        </ul>
+
+        <div class="bx bx-menu" id="menu-icon"></div>
+    </header>
+    <section class="login_section">
+        <div class="login_wrapper">
+            <div class="inner_box">
+                <div class="forms_wrap">
+
+                    <form autocomplete="off" class="sign-in-form" action="/login" method="post">
+                        <div class="logo_wrapper">
+                            <img src="{{ url_for('static', filename='img/logo.png') }}">
+                            <h4>ishbook</h4>
+                        </div>
+
+                        <div class="head_wrapper">
+                            <h2>Welcome Back</h2>
+                            <h6>Not registred yet?</h6>
+                            <a href="#" class="toggle">Sign up</a>
+                        </div>
+
+                        <div>
+                            <div class="input_wrapper">
+                                <input type="email" name="email" class="input_field" autocomplete="on" required>
+                                <label>Email</label>
+                            </div>
+
+                            <div class="input_wrapper">
+                                <input name="password" type="password" minlength="4" class="input_field" autocomplete="on" required />
+                                <label>Password</label>
+                            </div>
+
+                            <p class="hint" style="margin-bottom: 15px;">
+                                By logging in, I accept the
+                                <a href="/datenschutz">Privacy Policy</a> and
+                                <a href="/agb">Terms and Conditions</a>
+                            </p>
+
+                            <button type="submit" name="action" value="login" class="sign_btn">Sign in</button>
+
+                            {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                            <div>
+                                {% for message in messages %}
+                                <div>
+                                    <p class="{% if 'Successfully registered.' in message %}success_message{% elif 'Email already exists.' in message %}error_message{% elif 'Wrong password.' in message %}error_message{% elif 'Email does not exist.' in message %}error_message{% endif %}">{{ message }}</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            {% endwith %}
+                            <div class="hint-wrapper">
+                                <p class="hint">
+                                    Forgotten your password?
+                                    <a href="">Get help</a> signing in
+                                </p>
+                            </div>
+                        </div>
+                    </form>
+
+
+                    <form method="post" autocomplete="off" class="sign-up-form">
+                        <div class="logo_wrapper">
+                            <img src="{{ url_for('static', filename='img/logo.png') }}">
+                            <h4>ishbook</h4>
+                        </div>
+
+                        <div class="head_wrapper">
+                            <h2>Get Started</h2>
+                            <h6>Already have an account?</h6>
+                            <a href="#" class="toggle">Sign in</a>
+                        </div>
+
+                        <div>
+                            <div class="input_wrapper">
+                                <input type="text" name="name" class="input_field" autocomplete="on" required>
+                                <label>Name</label>
+                            </div>
+
+                            <div class="input_wrapper">
+                                <input type="email" name="email" class="input_field" autocomplete="on" required>
+                                <label>Email</label>
+                            </div>
+
+                            <div class="input_wrapper">
+                                <input name="password" type="password" minlength="4" class="input_field" autocomplete="on" required />
+                                <label>Password</label>
+                            </div>
+
+                            <button type="submit" value="signup" name="action" class="sign_btn">Sign Up</button>
+
+                            <p class="hint">
+                                By signing up, I agree to the
+                                <a href="/datenschutz">Privacy Policy</a> and
+                                <a href="/agb">Terms and Conditions</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+
+
+                <!-- Slideshow -->
+                <div class="carousel">
+                    <div class="images_wrapper">
+                        <img src="{{ url_for('static', filename='img/banner.png') }}" class="image img-1 show" alt="ad1" />
+                        <img src="{{ url_for('static', filename='img/banner2.png') }}" class="image img-2" alt="ad2" />
+                        <img src="{{ url_for('static', filename='img/banner3.png') }}" class="image img-3" alt="ad3" />
+                    </div>
+
+                    <div class="text_slider">
+                        <div class="text_wrap">
+                            <div class="text_group">
+                                <h2>Track Past Orders</h2>
+                                <h2>Effortless Reordering</h2>
+                                <h2>Identify Favorites</h2>
+                            </div>
+                        </div>
+
+                        <div class="bullets">
+                            <span class="aktuelles_bild" data-value="1"></span>
+                            <span data-value="2"></span>
+                            <span data-value="3"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html> 

@@ -4,3 +4,7 @@ requests
 opencv
 openai
 mysql-connector-python
+forex-python
+iso4217
+langchain
+chromadb

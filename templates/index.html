@@ -26,8 +26,12 @@
             <li><a href="/">Home</a></li>
             <li><a href="/imprint">Imprint</a></li>
             <li><a href="/privacy">Data protection</a></li>
-            <li><a href="#">About us</a></li>
-            <li><a href="#">Contact</a></li>
+            {% if user %}
+            <li><a href="/history">History</a></li>
+            <li><a href="/logout">Logout</a></li>
+            {% else %}
+            <li><a href="/login">Login</a></li>
+            {% endif %}
         </ul>
 
         <div class="bx bx-menu" id="menu-icon"></div>
@@ -35,6 +39,9 @@
 
     <section class="main-section">
         <div class="main-text">
+            {% if user %}
+            <h4>Hi, {{user}}</h4>
+            {% endif %}
             <h4>Discover a World of Flavors</h4>
             <h1>DISHBOOK</h1>
             <p class="description">
@@ -43,26 +50,38 @@
             </p>
             {% with messages = get_flashed_messages() %}
             {% if messages %}
-            <div>
-                {% for message in messages %}
-                <div class="alert">
-                    <p>{{ message }}</p>
-                </div>
-                {% endfor %}
+            {% for message in messages %}
+            <div class="alert" id="error_message">
+                <p>{{ message }}</p>
             </div>
+            {% endfor %}
             {% endif %}
             {% endwith %}
-            <form action="/upload#result" method="post" enctype="multipart/form-data">
-                <input name="image" type="file" class="form-control" onchange="getImagePreview(event)" accept=".png, .jpg, .jpeg">
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <input name="image" type="file" class="uploadInput" onchange="getImagePreview(event)" accept=".png, .jpg, .jpeg">
                 <button type="submit"><i class='bx bx-upload'></i>Upload</button>
+                <p class="privacyHint">
+                    <input type="checkbox" name="privacyTerms" checked>
+                    I accept the
+                    <a href="/privacy">Privacy Policy</a> and
+                    <a href="/privacy">Terms and Conditions</a>
+                </p>
             </form>
+
+
+            <button id="showMapButton"><i class='bx bx-current-location'></i>Get closest Food Spot</button>
         </div>
 
-        <div class="main-img">
+        <div class="main-img" id="main-img">
             <img src="{{ url_for('static', filename='img/banner.png') }}" alt="">
         </div>
+        <div class="map" id="map"></div>
+        <div id="loader">
+            <div class="loader"></div>
+        </div>
     </section>
-    
+
+
     <div class="icon">
         <a href="/"><i class='bx bxl-instagram'></i></a>
         <a href="/"><i class='bx bxl-linkedin-square'></i></a>
@@ -85,7 +104,10 @@
                 {% if item.image %}
                 <img src="{{ item.image }}" alt="Relevant Image" class="img-thumbnail">
                 {% endif %}
-                <h2>{{ item.line }}</h2>
+                <div class="dish_header">
+                    <h2>{{ item.line }}</h2>
+                    <p>{{ item.price }} {{ item.currency }}</p>
+                </div>
                 <p>{{ item.text }}</p>
             </div>
             {% endfor %}
@@ -96,5 +118,23 @@
     <script src="https://unpkg.com/scrollreveal"></script>
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+
+    <script>
+        window.addEventListener("scroll", function () {
+            var targetElement = document.querySelector("header");
+            var scrollPosition = window.scrollY;
+
+            if (scrollPosition > 0) {
+                targetElement.style.background = "linear-gradient(350.59deg, #4d9559 0%, #38703d 28.53%, #284b41 100%)";
+                targetElement.style.paddingTop = "7px";
+                targetElement.style.paddingBottom = "7px";
+            } else {
+                targetElement.style.background = "";
+                targetElement.style.paddingTop = "";
+                targetElement.style.paddingBottom = "";
+            }
+        });
+    </script>
 </body>
 </html>
