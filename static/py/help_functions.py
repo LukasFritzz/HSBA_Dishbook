@@ -1,4 +1,5 @@
 import  requests
+import  tiktoken
 import  static.py.keys          as keys
 
 from    flask                   import request
@@ -101,3 +102,8 @@ def get_meta_data(imagePath):
         pass
 
     return restaurantName, address
+
+def num_tokens_from_string(text, encodingName):
+    encoding    = tiktoken.get_encoding(encodingName)
+    numTokens   = len(encoding.encode(text))
+    return numTokens

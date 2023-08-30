@@ -3,21 +3,21 @@ import os
 import ast
 
 from static.py.help_functions   import *
-from iso4217                    import Currency
+from forex_python.converter     import CurrencyCodes
+
+from langchain.vectorstores     import FAISS
 from langchain.document_loaders import TextLoader
 from langchain.indexes          import VectorstoreIndexCreator
 from langchain.chat_models      import ChatOpenAI
-from langchain.memory           import ConversationBufferMemory
 
-def process_image(imagePath, newId):
+os.environ["OPENAI_API_KEY"] = keys.APIKEY
 
-    recognizedText  = pytesseract.image_to_string(imagePath, config=keys.myconfig)
-    response  = ""
-    filteredData    = []
+chat_model = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0613", streaming=True)
+chat_model.openai_api_key = os.environ['OPENAI_API_KEY']
 
-    if not recognizedText.strip():
-        return "error3", recognizedText, response
-    
+def process_text(path):
+    loader = TextLoader(path, encoding='utf8')
+
     languageMap = {
         'de': 'german',
         'es': 'spanish',
@@ -25,46 +25,75 @@ def process_image(imagePath, newId):
     }
     language = languageMap.get(request.headers.get('Accept-Language')[:2].lower(), 'english')
 
+    with open(path, 'r', encoding='utf-8') as file:
+        text = file.read()
+
+
+    query = """
+    extract dishes with prices and currencies if available.
+    Respond with a Python-usable array:
+    [
+        [
+            dish name 1,
+            your own brief description of dish in """ + language + """ language (up to 10 words),
+            extracted price of dish (default = None),
+            currency as ISO code (default = USD)
+        ],
+        [...],
+        ...
+    ]
+    Limit the description to a maximum of 10 words.
+    Correct dish names for typos and adjust capitalization.
+    """
+
+    index = VectorstoreIndexCreator(vectorstore_cls=FAISS).from_loaders([loader])
+
+    result = index.query(query, llm=chat_model)
+
+    tokens = num_tokens_from_string(text, "cl100k_base") + num_tokens_from_string(query, "cl100k_base") + num_tokens_from_string(result, "cl100k_base")
+    
+    return result, tokens
+
+
+def process_image(imagePath, newId):
+
+    recognizedText  = pytesseract.image_to_string(imagePath, config=keys.myconfig)
+    response        = ""
+    filteredData    = []
+    tokens          = 0
+
+    if not recognizedText.strip():
+        return "error3", recognizedText, response, tokens
+
     outputFile = f'static/temp/data_{newId}.txt'
     with open(outputFile, 'w', encoding='utf-8') as file:
         file.write(recognizedText)
 
-    # reset muss weiterhin getestet werden, nicht 100% sicher
-    ConversationBufferMemory().clear()
-    os.environ["OPENAI_API_KEY"] = keys.APIKEY
-    
-    query   = "extract all dishes and (prices, currencies if available) and respond with python usable array[[name of dish 1, explanation of what dish could consist in " + language + " language. (create your own text and use a maximum of 10 words), extracted price of respective dish as number default = None, Price currency ISO code default = USD],[,,,] etc...] and no other explanation. Correct dish names if typo and adjust capitalization of dish"
-
-    loader          = TextLoader(outputFile)
-    index           = VectorstoreIndexCreator().from_loaders([loader])
-    response        = index.query(query, llm=ChatOpenAI())
+    response, tokens = process_text(outputFile)
 
     try:
         print(response)
         if isinstance(response, str):
             responseArray = ast.literal_eval(response)
-            print("if")
         elif isinstance(response, list):
             responseArray = response
-            print("elif")
         else:
-            print("else")
-            return "error1", recognizedText, response   
+            return "error1", recognizedText, response, tokens   
     except (ValueError, SyntaxError):
-        print("except")
-        return "error1", recognizedText, response
+        return "error1", recognizedText, response, tokens
     
     os.remove(outputFile)
 
     ToCurrency = get_user_home_currency()
 
+    currency_codes = CurrencyCodes()
+
     for line in responseArray:
         url, isError = get_relevant_image("meal: " + line[0])
         if isError:
-            return "error2", recognizedText, response
-        if line[2] and line[3]:
+            return "error2", recognizedText, response, tokens
+        if line[2] and line[3] and currency_codes.get_currency_name(line[3]):
             try:
-                Currency(line[3])
                 euroPrice   = round(convert_to_euro(line[3], ToCurrency, line[2]), 2)
             except:
                 pass
@@ -75,8 +104,7 @@ def process_image(imagePath, newId):
 
     data = [{'line': lineMeal, 'text': lineText, 'price': price, 'currency': currency, 'image': image} for lineMeal, lineText, price, currency, image in filteredData]
 
-    return data, recognizedText, response
-
+    return data, recognizedText, response, tokens
 
 
 def get_relevant_image(searchQuery):
