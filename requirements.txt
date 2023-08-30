@@ -5,6 +5,7 @@ opencv
 openai
 mysql-connector-python
 forex-python
-iso4217
 langchain
-chromadb
+tiktoken
+faiss-gpu
+faiss-cpu-1.7.4

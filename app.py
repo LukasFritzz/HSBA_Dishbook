@@ -52,16 +52,16 @@ def upload():
         
         restaurantName, address = get_meta_data(imagePath)
 
-        data, recognizedText, response = process_image(imagePath, newId)
+        data, recognizedText, response, tokens = process_image(imagePath, newId)
         isError         = isinstance(data, str) and data in errorMessage
 
-        insertValue     = (newId, g.id, recognizedText, str(response), int(isError), None if not isError else errorMessage[data], os.path.join('history/', fileName), address, restaurantName),
+        insertValue     = (newId, g.id, recognizedText, str(response), tokens, int(isError), None if not isError else errorMessage[data], os.path.join('history/', fileName), address, restaurantName),
   
     else:
-        insertValue     = (newId, g.id, None, None, 1, errorMessage[data], None, None, None),
+        insertValue     = (newId, g.id, None, None, None, 1, errorMessage[data], None, None, None),
 
 
-    insertStatement     = "INSERT INTO Query (ID, USER_ID, RECOGNIZED_TEXT, OPENAI_RESPONSE, IS_ERROR, ERROR_MESSAGE, IMAGE, ADDRESS, RESTAURANT_NAME) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    insertStatement     = "INSERT INTO Query (ID, USER_ID, RECOGNIZED_TEXT, OPENAI_RESPONSE, USED_TOKENS, IS_ERROR, ERROR_MESSAGE, IMAGE, ADDRESS, RESTAURANT_NAME) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
     execute_sql_query(insertStatement, insertValue, fetch=False)
     
     if isError:
